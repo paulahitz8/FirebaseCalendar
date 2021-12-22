@@ -23,7 +23,6 @@ Stream<List<Event>> userEventSnapshots(String user) {
   final stream =
       db.collection("/users/$user/events").orderBy("date").snapshots();
   return stream.map((query) {
-    //Map<DateTime, List<Event>> events = {};
     List<Event> events = [];
     for (final doc in query.docs) {
       events.add(Event.fromFirestore(doc.id, doc.data()));
