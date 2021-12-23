@@ -1,14 +1,10 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_project/model/event.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/intl.dart';
-// These are for next delivery
-//import 'package:firebase_project/screens/event_screen.dart';
-//import 'package:day_night_time_picker/day_night_time_picker.dart';
+import 'package:firebase_project/screens/event_screen.dart';
 
 class CalendarScreen extends StatelessWidget {
   final String user;
@@ -49,7 +45,7 @@ class CalendarScreen extends StatelessWidget {
                 body: Center(child: CircularProgressIndicator()),
               );
             case ConnectionState.active:
-              return _Screen(classifyDates(snapshot.data!), user);
+              return _CalendarScreen(classifyDates(snapshot.data!), user);
             case ConnectionState.none:
               return ErrorWidget("The stream was wrong (connectionState.none)");
             case ConnectionState.done:
@@ -61,16 +57,16 @@ class CalendarScreen extends StatelessWidget {
   }
 }
 
-class _Screen extends StatefulWidget {
+class _CalendarScreen extends StatefulWidget {
   final String user;
   final Map<DateTime, List<Event>> events;
-  const _Screen(this.events, this.user);
+  const _CalendarScreen(this.events, this.user);
 
   @override
-  _ScreenState createState() => _ScreenState();
+  _CalendarScreenState createState() => _CalendarScreenState();
 }
 
-class _ScreenState extends State<_Screen> {
+class _CalendarScreenState extends State<_CalendarScreen> {
   late TextEditingController controller;
 
   CalendarFormat format = CalendarFormat.month;
@@ -293,48 +289,16 @@ class _ScreenState extends State<_Screen> {
                         backgroundColor: Colors.amber[900],
                         child: const Icon(Icons.add,
                             color: Colors.white, size: 30),
-                        onPressed: () => showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text("Add Event"),
-                            content: TextFormField(
-                              controller: _eventController,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => EventScreen(
+                                  user: widget.user,
+                                  eventController: _eventController,
+                                  selectedDay: selectedDay),
                             ),
-                            actions: [
-                              TextButton(
-                                child: const Text("Cancel",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    )),
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                              TextButton(
-                                child: const Text("Ok",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    )),
-                                onPressed: () {
-                                  if (_eventController.text.isEmpty) {
-                                    return;
-                                  }
-                                  addEvent(widget.user, _eventController.text,
-                                      selectedDay);
-                                  Navigator.pop(context);
-                                  _eventController.clear();
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Second screen not implemented for this delivery
-
-                        // onPressed: () {
-                        //   Navigator.of(context).push(
-                        //     MaterialPageRoute(
-                        //       builder: (context) => const EventScreen(),
-                        //     ),
-                        //   );
-                        // },
+                          );
+                        },
                       ),
                     ),
                   ],
