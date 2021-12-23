@@ -1,11 +1,14 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_project/model/event.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:firebase_project/screens/event_screen.dart';
+// These are for next delivery
+//import 'package:firebase_project/screens/event_screen.dart';
+//import 'package:day_night_time_picker/day_night_time_picker.dart';
 
 class CalendarScreen extends StatelessWidget {
   final String user;
@@ -20,7 +23,7 @@ class CalendarScreen extends StatelessWidget {
     for (final e in events) {
       final d = e.date!;
       final dayDate = DateTime.utc(d.year, d.month, d.day);
-      debugPrint(dayDate.toIso8601String());
+      //debugPrint(dayDate.toIso8601String());
       if (!selectedEvents.containsKey(dayDate)) {
         selectedEvents[dayDate] = [e];
       } else {
@@ -71,17 +74,16 @@ class _ScreenState extends State<_Screen> {
   late TextEditingController controller;
 
   CalendarFormat format = CalendarFormat.month;
-  DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
-
-  TimeOfDay _time = TimeOfDay.now().replacing(minute: 30);
-  bool iosStyle = true;
-
-  void onTimeChanged(TimeOfDay newTime) {
-    setState(() {
-      _time = newTime;
-    });
-  }
+  DateTime selectedDay = DateTime.now();
+  // For next delivery
+  //TimeOfDay _time = TimeOfDay.now().replacing(minute: 30);
+  //bool iosStyle = true;
+  // void onTimeChanged(TimeOfDay newTime) {
+  //   setState(() {
+  //     _time = newTime;
+  //   });
+  // }
 
   final TextEditingController _eventController = TextEditingController();
 
@@ -114,6 +116,7 @@ class _ScreenState extends State<_Screen> {
         content: Text("You deleted '${event.name}'"),
         action: SnackBarAction(
           label: "UNDO",
+          textColor: Colors.amber[900],
           onPressed: () {
             undeleteEvent(context.read<String>(), event);
           },
@@ -128,7 +131,7 @@ class _ScreenState extends State<_Screen> {
       appBar: AppBar(
         title: const Text("My Calendar",
             style: TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w700,
                 fontSize: 26,
                 color: Colors.black)),
         backgroundColor: Colors.orange[100],
@@ -143,55 +146,28 @@ class _ScreenState extends State<_Screen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: FloatingActionButton(
-                      child: const Icon(Icons.arrow_back_ios_new,
-                          color: Colors.white, size: 26),
-                      backgroundColor: Colors.amber[900],
-                      onPressed: () {},
-                    ),
-                  ),
-                  StreamBuilder(
-                    stream: Stream.periodic(const Duration(seconds: 1)),
-                    builder: (context, snapshot) {
-                      return Center(
-                        child: Text(
-                          DateFormat('h:mm a').format(DateTime.now()),
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w400),
-                        ),
-                      );
-                    },
+                  IconButton(
+                    color: Colors.amber[900],
+                    icon: const Icon(Icons.arrow_back_ios_new),
+                    onPressed: () {},
                   ),
                   IconButton(
-                    //padding: const EdgeInsets.only(left: 40),
+                    padding: const EdgeInsets.only(left: 20),
                     iconSize: 50,
                     icon: Image.asset("assets/honey_bee.png"),
                     onPressed: () {},
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: FloatingActionButton(
-                      child: const Icon(Icons.person,
-                          color: Colors.white, size: 30),
-                      backgroundColor: Colors.amber[900],
-                      onPressed: () {},
-                    ),
+                  IconButton(
+                    color: Colors.amber[900],
+                    icon: const Icon(Icons.person),
+                    onPressed: () {},
+                    iconSize: 28,
                   ),
                 ],
               ),
               Container(
-                height: 1,
-                color: Colors.black,
+                height: 2,
+                color: Colors.black12,
               ),
               // Calendar
               TableCalendar(
@@ -280,21 +256,13 @@ class _ScreenState extends State<_Screen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Icon(
-                    Icons.horizontal_rule,
-                    size: 30,
-                  ),
-                  Icon(
-                    Icons.circle,
-                    size: 8,
-                  ),
-                  Icon(
-                    Icons.horizontal_rule,
-                    size: 30,
-                  ),
+                  Icon(Icons.horizontal_rule, size: 30),
+                  Icon(Icons.circle, size: 8),
+                  Icon(Icons.horizontal_rule, size: 30),
                 ],
               ),
               Padding(
@@ -302,17 +270,17 @@ class _ScreenState extends State<_Screen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (widget.events[selectedDay] != null)
+                    if (widget.events[selectedDay] == null)
                       const Text(
-                        "Plans for the day:",
+                        "Looks like a relaxing day.",
                         style: TextStyle(
                           fontSize: 16,
                           fontStyle: FontStyle.italic,
                         ),
                       ),
-                    if (widget.events[selectedDay] == null)
+                    if (widget.events[selectedDay] != null)
                       const Text(
-                        "Looks like a relaxing day.",
+                        "Plans for the day:",
                         style: TextStyle(
                           fontSize: 16,
                           fontStyle: FontStyle.italic,
@@ -325,46 +293,48 @@ class _ScreenState extends State<_Screen> {
                         backgroundColor: Colors.amber[900],
                         child: const Icon(Icons.add,
                             color: Colors.white, size: 30),
-                        // onPressed: () => showDialog(
-                        //   context: context,
-                        //   builder: (context) => AlertDialog(
-                        //     title: const Text("Add Event"),
-                        //     content: TextFormField(
-                        //       controller: _eventController,
-                        //     ),
-                        //     actions: [
-                        //       TextButton(
-                        //         child: const Text("Cancel",
-                        //             style: TextStyle(
-                        //               color: Colors.black,
-                        //             )),
-                        //         onPressed: () => Navigator.pop(context),
-                        //       ),
-                        //       TextButton(
-                        //         child: const Text("Ok",
-                        //             style: TextStyle(
-                        //               color: Colors.black,
-                        //             )),
-                        //         onPressed: () {
-                        //           if (_eventController.text.isEmpty) {
-                        //             return;
-                        //           }
-                        //           addEvent(widget.user, _eventController.text,
-                        //               selectedDay);
-                        //           Navigator.pop(context);
-                        //           _eventController.clear();
-                        //         },
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const EventScreen(),
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text("Add Event"),
+                            content: TextFormField(
+                              controller: _eventController,
                             ),
-                          );
-                        },
+                            actions: [
+                              TextButton(
+                                child: const Text("Cancel",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    )),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                              TextButton(
+                                child: const Text("Ok",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    )),
+                                onPressed: () {
+                                  if (_eventController.text.isEmpty) {
+                                    return;
+                                  }
+                                  addEvent(widget.user, _eventController.text,
+                                      selectedDay);
+                                  Navigator.pop(context);
+                                  _eventController.clear();
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Second screen not implemented for this delivery
+
+                        // onPressed: () {
+                        //   Navigator.of(context).push(
+                        //     MaterialPageRoute(
+                        //       builder: (context) => const EventScreen(),
+                        //     ),
+                        //   );
+                        // },
                       ),
                     ),
                   ],
@@ -388,15 +358,15 @@ class _ScreenState extends State<_Screen> {
                   },
                 ),
               ),
-
-              createInlinePicker(
-                elevation: 1,
-                value: _time,
-                onChange: onTimeChanged,
-                iosStylePicker: iosStyle,
-                minMinute: 0,
-                maxMinute: 59,
-              ),
+              // This is for next delivery
+              // createInlinePicker(
+              //   elevation: 1,
+              //   value: _time,
+              //   onChange: onTimeChanged,
+              //   iosStylePicker: iosStyle,
+              //   minMinute: 0,
+              //   maxMinute: 59,
+              // ),
             ],
           ),
         ),
