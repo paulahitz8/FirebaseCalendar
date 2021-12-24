@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-//import 'package:day_night_time_picker/day_night_time_picker.dart';
-//import 'package:firebase_project/model/event.dart';
+import 'package:day_night_time_picker/day_night_time_picker.dart';
+import 'package:firebase_project/model/event.dart';
 
 class EventInfoScreen extends StatefulWidget {
   final user;
-  final eventController;
   final selectedDay;
-  const EventInfoScreen(
-      {Key? key, this.user, this.eventController, this.selectedDay})
+  final event;
+  const EventInfoScreen({Key? key, this.user, this.selectedDay, this.event})
       : super(key: key);
   @override
   _EventInfoScreenState createState() => _EventInfoScreenState();
@@ -15,11 +14,22 @@ class EventInfoScreen extends StatefulWidget {
 
 class _EventInfoScreenState extends State<EventInfoScreen> {
   late TextEditingController controller;
+  TimeOfDay _time = TimeOfDay.now().replacing(minute: 30);
+  bool iosStyle = true;
+  DateTime finalDate = DateTime.now();
+
+  void onTimeChanged(TimeOfDay newTime) {
+    setState(() {
+      _time = newTime;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController();
+    controller = TextEditingController(text: widget.event.name);
+    _time = TimeOfDay(
+        hour: widget.event.date.hour, minute: widget.event.date.minute);
   }
 
   @override
@@ -47,23 +57,19 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Text(
-                  "Title:",
-                  style: TextStyle(fontSize: 22),
-                ),
                 TextFormField(
-                  controller: widget.eventController,
+                  controller: controller,
                   style: const TextStyle(fontSize: 24),
                 ),
                 const SizedBox(height: 20),
-                // createInlinePicker(
-                //   elevation: 1,
-                //   value: _time,
-                //   onChange: onTimeChanged,
-                //   iosStylePicker: iosStyle,
-                //   minMinute: 0,
-                //   maxMinute: 59,
-                // ),
+                createInlinePicker(
+                  elevation: 1,
+                  value: _time,
+                  onChange: onTimeChanged,
+                  iosStylePicker: iosStyle,
+                  minMinute: 0,
+                  maxMinute: 59,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -82,19 +88,19 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
                             color: Colors.black,
                           )),
                       onPressed: () {
-                        // if (widget.eventController.text.isEmpty) {
-                        //   return;
-                        // }
-                        // finalDate = DateTime(
-                        //     widget.selectedDay.year,
-                        //     widget.selectedDay.month,
-                        //     widget.selectedDay.day,
-                        //     _time.hour,
-                        //     _time.minute);
-                        // addEvent(widget.user, widget.eventController.text,
-                        //     finalDate);
-                        // Navigator.of(context).pop();
-                        // widget.eventController.clear();
+                        if (controller.text.isEmpty) {
+                          return;
+                        }
+                        finalDate = DateTime(
+                            widget.event.date.year,
+                            widget.event.date.month,
+                            widget.event.date.day,
+                            _time.hour,
+                            _time.minute);
+                        addEvent(widget.user, controller.text, finalDate);
+                        deleteEvent(widget.user, widget.event.id);
+                        Navigator.of(context).pop();
+                        controller.clear();
                       },
                     )
                   ],

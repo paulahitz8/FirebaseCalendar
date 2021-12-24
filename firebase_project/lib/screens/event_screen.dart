@@ -4,18 +4,14 @@ import 'package:firebase_project/model/event.dart';
 
 class EventScreen extends StatefulWidget {
   final user;
-  final eventController;
   final selectedDay;
-  const EventScreen(
-      {Key? key, this.user, this.eventController, this.selectedDay})
-      : super(key: key);
+  const EventScreen({Key? key, this.user, this.selectedDay}) : super(key: key);
   @override
   _EventScreenState createState() => _EventScreenState();
 }
 
 class _EventScreenState extends State<EventScreen> {
   late TextEditingController controller;
-  // For next delivery
   TimeOfDay _time = TimeOfDay.now().replacing(minute: 30);
   bool iosStyle = true;
   DateTime finalDate = DateTime.now();
@@ -62,7 +58,7 @@ class _EventScreenState extends State<EventScreen> {
                   style: TextStyle(fontSize: 22),
                 ),
                 TextFormField(
-                  controller: widget.eventController,
+                  controller: controller,
                   style: const TextStyle(fontSize: 24),
                 ),
                 const SizedBox(height: 20),
@@ -92,7 +88,7 @@ class _EventScreenState extends State<EventScreen> {
                             color: Colors.black,
                           )),
                       onPressed: () {
-                        if (widget.eventController.text.isEmpty) {
+                        if (controller.text.isEmpty) {
                           return;
                         }
                         finalDate = DateTime(
@@ -101,10 +97,9 @@ class _EventScreenState extends State<EventScreen> {
                             widget.selectedDay.day,
                             _time.hour,
                             _time.minute);
-                        addEvent(widget.user, widget.eventController.text,
-                            finalDate);
+                        addEvent(widget.user, controller.text, finalDate);
                         Navigator.of(context).pop();
-                        widget.eventController.clear();
+                        controller.clear();
                       },
                     )
                   ],

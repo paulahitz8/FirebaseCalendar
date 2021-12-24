@@ -120,10 +120,11 @@ class _CalendarScreenState extends State<_CalendarScreen> {
       appBar: AppBar(
         title: const Text("My Calendar",
             style: TextStyle(
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w500,
+                fontStyle: FontStyle.italic,
                 fontSize: 26,
-                color: Colors.black)),
-        backgroundColor: Colors.orange[100],
+                color: Colors.white)),
+        backgroundColor: const Color.fromRGBO(214, 125, 0, 1.0),
         centerTitle: true,
       ),
       body: Padding(
@@ -136,7 +137,7 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    color: Colors.amber[900],
+                    color: const Color.fromRGBO(214, 125, 0, 1.0),
                     icon: const Icon(Icons.arrow_back_ios_new),
                     onPressed: () {},
                   ),
@@ -147,7 +148,7 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                     onPressed: () {},
                   ),
                   IconButton(
-                    color: Colors.amber[900],
+                    color: const Color.fromRGBO(214, 125, 0, 1.0),
                     icon: const Icon(Icons.person),
                     onPressed: () {},
                     iconSize: 28,
@@ -191,7 +192,7 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                   markersAnchor: 1.88,
                   markerSizeScale: 0.13,
                   markerDecoration: BoxDecoration(
-                    color: Colors.orange,
+                    color: Color.fromRGBO(214, 125, 0, 1.0),
                     shape: BoxShape.circle,
                   ),
 
@@ -237,7 +238,7 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                   ),
                   formatButtonShowsNext: false,
                   formatButtonDecoration: BoxDecoration(
-                    color: Colors.amber[900],
+                    color: const Color.fromRGBO(214, 125, 0, 1.0),
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                   formatButtonTextStyle: const TextStyle(
@@ -279,16 +280,14 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                       width: 40,
                       height: 40,
                       child: FloatingActionButton(
-                        backgroundColor: Colors.amber[900],
+                        backgroundColor: const Color.fromRGBO(214, 125, 0, 1.0),
                         child: const Icon(Icons.add,
                             color: Colors.white, size: 30),
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => EventScreen(
-                                  user: widget.user,
-                                  eventController: _eventController,
-                                  selectedDay: selectedDay),
+                                  user: widget.user, selectedDay: selectedDay),
                             ),
                           );
                         },
@@ -315,8 +314,8 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                       MaterialPageRoute(
                         builder: (context) => EventInfoScreen(
                             user: widget.user,
-                            eventController: _eventController,
-                            selectedDay: selectedDay),
+                            selectedDay: selectedDay,
+                            event: event),
                       ),
                     );
                   },
