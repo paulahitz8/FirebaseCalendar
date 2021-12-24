@@ -4,7 +4,7 @@ class Event {
   String name;
   String id = '';
   int urgency = 0;
-  DateTime? date;
+  late DateTime date;
   //int category;
 
   Event({required this.name});

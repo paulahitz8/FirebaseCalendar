@@ -5,6 +5,7 @@ import 'package:firebase_project/model/event.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:firebase_project/screens/event_screen.dart';
+import 'package:intl/intl.dart';
 
 class CalendarScreen extends StatelessWidget {
   final String user;
@@ -72,15 +73,6 @@ class _CalendarScreenState extends State<_CalendarScreen> {
   CalendarFormat format = CalendarFormat.month;
   DateTime focusedDay = DateTime.now();
   DateTime selectedDay = DateTime.now();
-  // For next delivery
-  //TimeOfDay _time = TimeOfDay.now().replacing(minute: 30);
-  //bool iosStyle = true;
-  // void onTimeChanged(TimeOfDay newTime) {
-  //   setState(() {
-  //     _time = newTime;
-  //   });
-  // }
-
   final TextEditingController _eventController = TextEditingController();
 
   @override
@@ -313,6 +305,9 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                   ),
                   title: Text(
                     event.name,
+                  ),
+                  trailing: Text(
+                    DateFormat('hh:mm a').format(event.date),
                   ),
                   onTap: () {
                     // new window with information about event
