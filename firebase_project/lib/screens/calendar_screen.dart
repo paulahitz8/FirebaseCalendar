@@ -5,6 +5,7 @@ import 'package:firebase_project/model/event.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:firebase_project/screens/event_screen.dart';
+import 'package:firebase_project/screens/event_info_screen.dart';
 import 'package:intl/intl.dart';
 
 class CalendarScreen extends StatelessWidget {
@@ -310,22 +311,20 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                     DateFormat('hh:mm a').format(event.date),
                   ),
                   onTap: () {
-                    // new window with information about event
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => EventInfoScreen(
+                            user: widget.user,
+                            eventController: _eventController,
+                            selectedDay: selectedDay),
+                      ),
+                    );
                   },
                   onLongPress: () {
                     deleteWithUndo(context, event);
                   },
                 ),
               ),
-              // This is for next delivery
-              // createInlinePicker(
-              //   elevation: 1,
-              //   value: _time,
-              //   onChange: onTimeChanged,
-              //   iosStylePicker: iosStyle,
-              //   minMinute: 0,
-              //   maxMinute: 59,
-              // ),
             ],
           ),
         ),
