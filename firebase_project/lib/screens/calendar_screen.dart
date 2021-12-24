@@ -18,7 +18,7 @@ class CalendarScreen extends StatelessWidget {
   Map<DateTime, List<Event>> classifyDates(List<Event> events) {
     final Map<DateTime, List<Event>> selectedEvents = {};
     for (final e in events) {
-      final d = e.date!;
+      final d = e.date;
       final dayDate = DateTime.utc(d.year, d.month, d.day);
       //debugPrint(dayDate.toIso8601String());
       if (!selectedEvents.containsKey(dayDate)) {

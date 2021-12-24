@@ -18,6 +18,8 @@ class _EventScreenState extends State<EventScreen> {
   // For next delivery
   TimeOfDay _time = TimeOfDay.now().replacing(minute: 30);
   bool iosStyle = true;
+  DateTime finalDate = DateTime.now();
+
   void onTimeChanged(TimeOfDay newTime) {
     setState(() {
       _time = newTime;
@@ -93,8 +95,14 @@ class _EventScreenState extends State<EventScreen> {
                         if (widget.eventController.text.isEmpty) {
                           return;
                         }
+                        finalDate = DateTime(
+                            widget.selectedDay.year,
+                            widget.selectedDay.month,
+                            widget.selectedDay.day,
+                            _time.hour,
+                            _time.minute);
                         addEvent(widget.user, widget.eventController.text,
-                            widget.selectedDay);
+                            finalDate);
                         Navigator.of(context).pop();
                         widget.eventController.clear();
                       },

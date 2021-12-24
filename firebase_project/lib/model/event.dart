@@ -49,6 +49,6 @@ void undeleteEvent(String user, Event event) {
   db.doc("/users/$user/events/${event.id}").set({
     'name': event.name,
     'urgency': event.urgency,
-    'date': Timestamp.fromDate(event.date!),
+    'date': Timestamp.fromDate(event.date),
   });
 }
