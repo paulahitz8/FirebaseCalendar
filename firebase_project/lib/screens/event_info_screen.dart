@@ -17,6 +17,7 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
   TimeOfDay _time = TimeOfDay.now().replacing(minute: 30);
   bool iosStyle = true;
   DateTime finalDate = DateTime.now();
+  bool checkedValue = false;
 
   void onTimeChanged(TimeOfDay newTime) {
     setState(() {
@@ -27,6 +28,7 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
   @override
   void initState() {
     super.initState();
+    checkedValue = widget.event.urgency;
     controller = TextEditingController(text: widget.event.name);
     _time = TimeOfDay(
         hour: widget.event.date.hour, minute: widget.event.date.minute);
@@ -62,6 +64,16 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
                   style: const TextStyle(fontSize: 24),
                 ),
                 const SizedBox(height: 20),
+                CheckboxListTile(
+                  title: const Text("Urgent"),
+                  value: checkedValue,
+                  onChanged: (newValue) {
+                    setState(() {
+                      checkedValue = newValue!;
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
                 createInlinePicker(
                   elevation: 1,
                   value: _time,
@@ -69,6 +81,9 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
                   iosStylePicker: iosStyle,
                   minMinute: 0,
                   maxMinute: 59,
+                  //accentColor: Colors.deepOrange,
+                  //displayHeader: false,
+                  //themeData: ThemeData.dark(),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -97,7 +112,8 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
                             widget.event.date.day,
                             _time.hour,
                             _time.minute);
-                        addEvent(widget.user, controller.text, finalDate);
+                        addEvent(widget.user, controller.text, finalDate,
+                            checkedValue);
                         deleteEvent(widget.user, widget.event.id);
                         Navigator.of(context).pop();
                         controller.clear();

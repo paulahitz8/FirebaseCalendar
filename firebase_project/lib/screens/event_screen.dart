@@ -15,6 +15,7 @@ class _EventScreenState extends State<EventScreen> {
   TimeOfDay _time = TimeOfDay.now().replacing(minute: 30);
   bool iosStyle = true;
   DateTime finalDate = DateTime.now();
+  bool checkedValue = false;
 
   void onTimeChanged(TimeOfDay newTime) {
     setState(() {
@@ -62,6 +63,16 @@ class _EventScreenState extends State<EventScreen> {
                   style: const TextStyle(fontSize: 24),
                 ),
                 const SizedBox(height: 20),
+                CheckboxListTile(
+                  title: const Text("Urgent"),
+                  value: checkedValue,
+                  onChanged: (newValue) {
+                    setState(() {
+                      checkedValue = newValue!;
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
                 createInlinePicker(
                   elevation: 1,
                   value: _time,
@@ -97,7 +108,8 @@ class _EventScreenState extends State<EventScreen> {
                             widget.selectedDay.day,
                             _time.hour,
                             _time.minute);
-                        addEvent(widget.user, controller.text, finalDate);
+                        addEvent(widget.user, controller.text, finalDate,
+                            checkedValue);
                         Navigator.of(context).pop();
                         controller.clear();
                       },

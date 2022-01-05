@@ -121,7 +121,7 @@ class _CalendarScreenState extends State<_CalendarScreen> {
         title: const Text("My Calendar",
             style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontStyle: FontStyle.italic,
+                //fontStyle: FontStyle.italic,
                 fontSize: 26,
                 color: Colors.white)),
         backgroundColor: const Color.fromRGBO(214, 125, 0, 1.0),
@@ -299,10 +299,15 @@ class _CalendarScreenState extends State<_CalendarScreen> {
 
               ..._getEventsfromDay(selectedDay).map(
                 (Event event) => ListTile(
-                  leading: const Image(
-                    image: AssetImage('assets/bee_icon.png'),
-                    fit: BoxFit.fitHeight,
-                  ),
+                  leading: event.urgency
+                      ? const Image(
+                          image: AssetImage('assets/bee_icon_high.png'),
+                          fit: BoxFit.fitHeight,
+                        )
+                      : const Image(
+                          image: AssetImage('assets/bee_icon_low.png'),
+                          fit: BoxFit.fitHeight,
+                        ),
                   title: Text(
                     event.name,
                   ),

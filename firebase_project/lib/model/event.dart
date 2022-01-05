@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Event {
   String name;
   String id = '';
-  int urgency = 0;
+  bool urgency = false;
   late DateTime date;
   //int category;
 
@@ -31,10 +31,10 @@ Stream<List<Event>> userEventSnapshots(String user) {
   });
 }
 
-void addEvent(String user, String name, DateTime date) {
+void addEvent(String user, String name, DateTime date, bool urgency) {
   FirebaseFirestore.instance.collection("/users/$user/events").add({
     'name': name,
-    'urgency': 0,
+    'urgency': urgency,
     'date': date,
   });
 }
