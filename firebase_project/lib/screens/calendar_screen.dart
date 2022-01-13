@@ -7,6 +7,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:firebase_project/screens/event_screen.dart';
 import 'package:firebase_project/screens/event_info_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CalendarScreen extends StatelessWidget {
   final String user;
@@ -150,7 +151,47 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                   IconButton(
                     color: const Color.fromRGBO(214, 125, 0, 1.0),
                     icon: const Icon(Icons.person),
-                    onPressed: () {},
+                    onPressed: () {
+                      // set up the buttons
+                      Widget cancelButton = TextButton(
+                        child: const Text("Cancel",
+                            style: TextStyle(
+                              color: Color.fromRGBO(214, 125, 0, 1.0),
+                            )),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      );
+                      Widget continueButton = TextButton(
+                        child: const Text("Sign out",
+                            style: TextStyle(
+                              color: Color.fromRGBO(214, 125, 0, 1.0),
+                            )),
+                        onPressed: () {
+                          FirebaseAuth.instance.signOut();
+                        },
+                      );
+
+                      // set up the AlertDialog
+                      AlertDialog alert = AlertDialog(
+                        content: const Text(
+                          "Would you like to sign out?",
+                          textAlign: TextAlign.center,
+                        ),
+                        actions: [
+                          cancelButton,
+                          continueButton,
+                        ],
+                      );
+
+                      // show the dialog
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return alert;
+                        },
+                      );
+                    },
                     iconSize: 28,
                   ),
                 ],
