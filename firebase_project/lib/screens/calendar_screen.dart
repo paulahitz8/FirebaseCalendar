@@ -1,5 +1,6 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:ui';
+import 'package:firebase_project/screens/allevents_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_project/model/event.dart';
 import 'package:provider/provider.dart';
@@ -48,7 +49,8 @@ class CalendarScreen extends StatelessWidget {
                 body: Center(child: CircularProgressIndicator()),
               );
             case ConnectionState.active:
-              return _CalendarScreen(classifyDates(snapshot.data!), user);
+              return _CalendarScreen(
+                  classifyDates(snapshot.data!), user, snapshot.data!);
             case ConnectionState.none:
               return ErrorWidget("The stream was wrong (connectionState.none)");
             case ConnectionState.done:
@@ -63,7 +65,8 @@ class CalendarScreen extends StatelessWidget {
 class _CalendarScreen extends StatefulWidget {
   final String user;
   final Map<DateTime, List<Event>> events;
-  const _CalendarScreen(this.events, this.user);
+  final List<Event> allEvents;
+  const _CalendarScreen(this.events, this.user, this.allEvents);
 
   @override
   _CalendarScreenState createState() => _CalendarScreenState();
@@ -122,7 +125,6 @@ class _CalendarScreenState extends State<_CalendarScreen> {
         title: const Text("My Calendar",
             style: TextStyle(
                 fontWeight: FontWeight.w500,
-                //fontStyle: FontStyle.italic,
                 fontSize: 26,
                 color: Colors.white)),
         backgroundColor: const Color.fromRGBO(214, 125, 0, 1.0),
@@ -137,17 +139,6 @@ class _CalendarScreenState extends State<_CalendarScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    color: const Color.fromRGBO(214, 125, 0, 1.0),
-                    icon: const Icon(Icons.arrow_back_ios_new),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    padding: const EdgeInsets.only(left: 20),
-                    iconSize: 50,
-                    icon: Image.asset("assets/honey_bee.png"),
-                    onPressed: () {},
-                  ),
                   IconButton(
                     color: const Color.fromRGBO(214, 125, 0, 1.0),
                     icon: const Icon(Icons.person),
@@ -193,6 +184,25 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                       );
                     },
                     iconSize: 28,
+                  ),
+                  IconButton(
+                    padding: const EdgeInsets.only(left: 20),
+                    iconSize: 50,
+                    icon: Image.asset("assets/honey_bee.png"),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    color: const Color.fromRGBO(214, 125, 0, 1.0),
+                    icon: const Icon(Icons.access_time_filled),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => AllEventsScreen(
+                              user: widget.user, events: widget.allEvents),
+                        ),
+                      );
+                    },
+                    iconSize: 26,
                   ),
                 ],
               ),

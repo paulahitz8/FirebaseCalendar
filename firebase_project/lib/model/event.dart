@@ -39,6 +39,7 @@ void addEvent(String user, String name, DateTime date, bool urgency) {
   });
 }
 
+//setuser en vez de add user para setear
 void deleteEvent(String user, String docId) {
   final db = FirebaseFirestore.instance;
   db.doc("/users/$user/events/$docId").delete();
