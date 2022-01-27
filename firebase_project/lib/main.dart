@@ -1,10 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_project/AuthGate.dart';
+import 'package:firebase_project/screens/main_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_project/screens/calendar_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-//const String user = "paulahitz8@gmail.com";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
     return MaterialApp(
-      home: CalendarScreen(user: user.email!),
+      home: MainScreen(user: user.email!),
     );
   }
 }

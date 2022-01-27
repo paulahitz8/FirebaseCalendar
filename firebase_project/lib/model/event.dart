@@ -31,6 +31,15 @@ Stream<List<Event>> userEventSnapshots(String user) {
   });
 }
 
+void editEvent(String user, String docId, String newName, DateTime newDate,
+    bool newUrgency) {
+  FirebaseFirestore.instance.doc("/users/$user/events/$docId").update({
+    'name': newName,
+    'urgency': newUrgency,
+    'date': newDate,
+  });
+}
+
 void addEvent(String user, String name, DateTime date, bool urgency) {
   FirebaseFirestore.instance.collection("/users/$user/events").add({
     'name': name,

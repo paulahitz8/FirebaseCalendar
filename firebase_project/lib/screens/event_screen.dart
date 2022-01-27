@@ -13,7 +13,7 @@ class EventScreen extends StatefulWidget {
 class _EventScreenState extends State<EventScreen> {
   late TextEditingController controller;
   TimeOfDay _time = TimeOfDay.now().replacing(minute: 30);
-  bool iosStyle = true;
+  bool iosStyle = false;
   DateTime finalDate = DateTime.now();
   bool checkedValue = false;
 
@@ -38,87 +38,117 @@ class _EventScreenState extends State<EventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("New Event",
-            style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 26,
-                color: Colors.black)),
-        backgroundColor: Colors.orange[100],
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
-      body: Padding(
-          padding: const EdgeInsets.all(10),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Text(
-                  "Title:",
-                  style: TextStyle(fontSize: 22),
-                ),
-                TextFormField(
-                  controller: controller,
-                  style: const TextStyle(fontSize: 24),
-                ),
-                const SizedBox(height: 20),
-                CheckboxListTile(
-                  title: const Text("Urgent"),
-                  value: checkedValue,
-                  onChanged: (newValue) {
-                    setState(() {
-                      checkedValue = newValue!;
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                ),
-                createInlinePicker(
-                  elevation: 1,
-                  value: _time,
-                  onChange: onTimeChanged,
-                  iosStylePicker: iosStyle,
-                  minMinute: 0,
-                  maxMinute: 59,
-                ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            pinned: true,
+            backgroundColor: const Color.fromRGBO(214, 125, 0, 0.7),
+            iconTheme: const IconThemeData(
+              color: Colors.white,
+            ),
+            flexibleSpace: Column(
+              children: [
+                const SizedBox(height: 25),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextButton(
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(color: Colors.black),
+                    const SizedBox(width: 60),
+                    const Text(
+                      "New Event",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w400,
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
                     ),
-                    TextButton(
-                      child: const Text("Save",
-                          style: TextStyle(
-                            color: Colors.black,
-                          )),
-                      onPressed: () {
-                        if (controller.text.isEmpty) {
-                          return;
-                        }
-                        finalDate = DateTime(
-                            widget.selectedDay.year,
-                            widget.selectedDay.month,
-                            widget.selectedDay.day,
-                            _time.hour,
-                            _time.minute);
-                        addEvent(widget.user, controller.text, finalDate,
-                            checkedValue);
-                        Navigator.of(context).pop();
-                        controller.clear();
-                      },
-                    )
+                    IconButton(
+                      padding: const EdgeInsets.only(left: 20),
+                      iconSize: 50,
+                      icon: Image.asset("assets/honey_bee.png"),
+                      onPressed: () {},
+                    ),
                   ],
-                )
+                ),
               ],
             ),
-          )),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: TextFormField(
+                        controller: controller,
+                        style: const TextStyle(fontSize: 24),
+                      ),
+                    ),
+                    CheckboxListTile(
+                      title: const Text("Urgent"),
+                      value: checkedValue,
+                      onChanged: (newValue) {
+                        setState(() {
+                          checkedValue = newValue!;
+                        });
+                      },
+                    ),
+                    createInlinePicker(
+                      elevation: 2,
+                      value: _time,
+                      onChange: onTimeChanged,
+                      iosStylePicker: iosStyle,
+                      minMinute: 0,
+                      maxMinute: 59,
+                      accentColor: const Color.fromRGBO(214, 125, 0, 0.7),
+                      // okCancelStyle: const TextStyle(
+                      //   color: Colors.deepOrange,
+                      // ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          child: const Text(
+                            "Cancel",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text("Save",
+                              style: TextStyle(
+                                color: Colors.black,
+                              )),
+                          onPressed: () {
+                            if (controller.text.isEmpty) {
+                              return;
+                            }
+                            finalDate = DateTime(
+                                widget.selectedDay.year,
+                                widget.selectedDay.month,
+                                widget.selectedDay.day,
+                                _time.hour,
+                                _time.minute);
+                            addEvent(widget.user, controller.text, finalDate,
+                                checkedValue);
+                            Navigator.of(context).pop();
+                            controller.clear();
+                          },
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
