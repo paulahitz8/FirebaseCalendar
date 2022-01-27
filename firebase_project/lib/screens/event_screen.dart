@@ -41,6 +41,7 @@ class _EventScreenState extends State<EventScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            automaticallyImplyLeading: false,
             floating: true,
             pinned: true,
             backgroundColor: const Color.fromRGBO(214, 125, 0, 0.7),

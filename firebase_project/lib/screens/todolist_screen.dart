@@ -88,7 +88,7 @@ class _TodoScreenState extends State<_TodoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.only(top: 15),
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
